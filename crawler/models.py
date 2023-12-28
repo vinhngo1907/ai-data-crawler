@@ -81,3 +81,20 @@ class UserProfile(models.Model):
     def percent(self):
         result = random.randint(-3, 10)
         return (True, result) if result >= 0 else (False, -1 * result)
+
+    def concurrency_percent(self):
+        result = (self.concurrency / 10) * 100
+
+
+class CrawledLinks(models.Model):
+    userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    link = models.ForeignKey(Link, on_delete=models.CASCADE)
+    reschedule = models.IntegerField(default=3)
+    pub_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "by - " + self.userprofile.user.username
+
+class Notifications(models.Model):
+    def __str__(self):
+        return self
