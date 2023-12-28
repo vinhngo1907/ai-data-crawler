@@ -56,3 +56,28 @@ class SocialMedia(models.Model):
     hashtags = models.CharField(max_length=100)
     likes = models.CharField(max_lengt=30)
     retweets = models.CharField(max_lengt=30)
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    picture = models.ImageField(
+        null=True, upload_to="profile_images", default="/static/dummyuser.jpg"
+    )
+    crawled_links = models.IntegerField(default=0)
+    scraped_data = models.IntegerField(default=0)
+    concurrency = models.IntegerField(default=1)
+    recent_link = models.IntegerField(default=5)
+
+    def __str__(self):
+        return self.user.username
+
+    def time_spent_scraping(self):
+        now = timezone.now()
+        diff = now - self.user.date_joined
+        minutes = diff.total_seconds() / 3600
+
+        return round(minutes, 1)
+
+    def percent(self):
+        result = random.randint(-3, 10)
+        return (True, result) if result >= 0 else (False, -1 * result)
