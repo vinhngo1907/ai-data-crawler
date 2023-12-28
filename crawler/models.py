@@ -92,9 +92,21 @@ class CrawledLinks(models.Model):
     reschedule = models.IntegerField(default=3)
     pub_date = models.DateTimeField(auto_now_add=True)
 
+    def whenpublished():
+        print("Published!!!")
+
     def __str__(self):
         return "by - " + self.userprofile.user.username
 
+
 class Notifications(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.CharField(max_length=100, blank=False, null=False)
+    read = models.BooleanField(default=False)
+    pub_date = models.DateTimeField(auto_now_add=True)
+
+    def whenpublished():
+        print("Published!!!")
+
     def __str__(self):
-        return self
+        return self.user.username + " has new notification!!! " + str(self.pub_date)
