@@ -1,4 +1,4 @@
 from django.apps import AppConfig
 
-class CrawlerConfig(AppConfig):
+class SchedulerConfig(AppConfig):
     name = 'crawler'
