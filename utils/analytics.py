@@ -37,7 +37,7 @@ def category_percent(user):
     return context
 
 
-def keyword_trend(keyword_list):
+def keyword_trends(keyword_list):
     context = dict()
     temp = list()
     try:
