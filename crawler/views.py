@@ -12,4 +12,5 @@ def index(request):
     """
     userprofile = UserProfile.objects.get_or_create(user=request.user)[0]
     category = Category.objects.all()
-    notifications = Notifications.objects.filter()
+    notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
+    unread = notifications.filter(read=False)
