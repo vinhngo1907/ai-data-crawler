@@ -31,7 +31,7 @@ class Category(models.Model):
 
 
 class Link(models.Model):
-    keyword = models.ForeignKey(KeyWord, on_delete=models.CASCADE)
+    keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     scrape_data = models.TextField(max_length=250, blank=False, null=False)
     pub_dat = models.DateTimeField(auto_now_add=True)
@@ -47,15 +47,15 @@ class Link(models.Model):
 
 
 class SocialMedia(models.Model):
-    keyword = models.ForeignKey(KeyWord, on_delete=models.CASCADE)
+    keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
     timestamp = models.DateTimeField()
     screen_name = models.CharField(max_length=50)
     username = models.CharField(max_length=50)
     tweet_url = models.CharField(max_length=500)
     text = models.TextField(max_length=500)
     hashtags = models.CharField(max_length=100)
-    likes = models.CharField(max_lengt=30)
-    retweets = models.CharField(max_lengt=30)
+    likes = models.CharField(max_length=30)
+    retweets = models.CharField(max_length=30)
 
 
 class UserProfile(models.Model):
