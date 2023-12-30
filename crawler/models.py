@@ -4,7 +4,7 @@ from django.utils import timezone
 import random, math
 
 
-class KeyWord(models.Model):
+class Keyword(models.Model):
     """
     Keywords Table
     """
