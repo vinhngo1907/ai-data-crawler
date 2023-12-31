@@ -62,5 +62,37 @@ def crawler_index(request):
     context["unique_keyword"] = unique_keyword
     context["keyword_labels"] = keyword_labels
     context["keyword_dataset"] = keywords_dataset
-    
+
     return render(request, "crawler/crawler.html", context=context)
+
+
+@login_required
+def report(request):
+    """
+    :param request:
+    :return: Detail Report
+    """
+
+    context = dict()
+    render_dict = dict()
+    temp = dict()
+    category = Category.objects.all()
+    userprofile = UserProfile.objects.get(user=request.user)
+    notifications = Notifications.objects.filter(user=userprofile)
+    unread = notifications.filter(read=False)
+    categories = [i.name for i in Category.objects.all()]
+    crawled_links = CrawledLinks.objects.filter(user=userprofile)
+    unique_keywords = list(crawled_links.values_list('link__keyword__name', flat=True).distinct())
+    for keyword in unique_keywords:
+        for category in categories:
+            temp[category] = CrawledLinks.objects.filter(userprofile=userprofile,  link__keyword__name=keyword, link__category__name=category)
+        context[keyword] = temp
+    
+    print(context)
+     render_dict['report'] = True
+    render_dict['category'] = category
+    render_dict['userprofile'] = userprofile
+    render_dict['notifications'] = notifications[:5]
+    render_dict['unread_count'] = len(unread)
+    render_dict['data'] = context
+    return render(request, "crawler/report.html", context=render_dict)
