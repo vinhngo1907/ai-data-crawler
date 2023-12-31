@@ -121,7 +121,7 @@ def social(request):
         keyword = request.POST.get("keyword")
         scrape_data = social_media_scrape(keyword)
         context = {"scrape_data": scrape_data}
-        return render(None, "crawler/sociale.html", context=context)
+        return render(None, "crawler/social.html", context=context)
 
 
 @login_required

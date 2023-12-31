@@ -90,7 +90,7 @@ def social_media_scrape(keyword):
     temp = {}
     base_url = "twitter.com"
     query = str(keyword) + " " + keywords[0]
-    tweets = query_tweets(query, limit=1, begindate=dt.date(2020, 6, 21))
+    tweets = query_tweets(query, limit=1, begindate=dt.date(2023, 6, 21))
     return tweets
 
 
