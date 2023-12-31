@@ -27,7 +27,31 @@ def google_query(query, **kwargs):
 keywords = ["Crime", "Child Abuse", "Women Abuse", "Cyber Bullying"]
 
 
-def social_media_scrape():
+def social_media_scrape(keyword):
+    result = {}
+    temp = ("twitter.com",)
+    query = str(keyword) + " " + keywords[0]
+    tweets = query_tweets(query, limit=1, begindate=dt.date(2023, 6, 21))
+    return tweets
+
+
+def extract_image(data):
+    print("Extracting images", data)
+    try:
+        image = data["pagemap"]["metags"][0]["og:image"]
+        return image
+    except:
+        pass
+
+
+def create_predict_image(images, images_list):
+    context = dict()
+    for image in images:
+        for image_list in images_list:
+            context[image] = images_list
+
+
+def crawling(query, keyword):
     """
     :param query:
     :param keywords:
@@ -35,5 +59,38 @@ def social_media_scrape():
     """
     general = list()
     crime = list()
-    
-    return True
+    child_abuse = list()
+    women_abuse = list()
+    pornography = list()
+    rape = list()
+    cyber_bullying = list()
+    general_scrape = list()
+    crime_scrape = list()
+    child_abuse_scrape = list()
+    women_abuse_scrape = list()
+    pornography_scrape = list()
+    rape_scrape = list()
+    cyber_bullying_scrape = list()
+
+    contenxt = {
+        "general": general,
+        "crime": crime,
+        "child abuse": child_abuse,
+        "woman abuse": women_abuse,
+        "cyber_bullying": cyber_bullying,
+    }
+    reduced = [
+        general[:4],
+        crime[:4],
+        child_abuse[:4],
+        women_abuse[:4],
+        cyber_bullying[:4],
+    ]
+
+    reduced2 = [
+        general_scrape[:4],
+        crime_scrape[:4],
+        child_abuse_scrape[:4],
+        women_abuse_scrape[:4],
+        cyber_bullying_scrape[:4],
+    ]
