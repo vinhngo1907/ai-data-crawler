@@ -89,7 +89,7 @@ def report(request):
         context[keyword] = temp
     
     print(context)
-     render_dict['report'] = True
+    render_dict['report'] = True
     render_dict['category'] = category
     render_dict['userprofile'] = userprofile
     render_dict['notifications'] = notifications[:5]
