@@ -1,18 +1,22 @@
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
-from crawler.models import UserProfile, Notifications, Category, CrawledLinks
+from crawler.models import UserProfile, Notifications, Category, CrawledLinks, Keyword
 from scheduler.models import ScrapedLink
 from django.db.models import Count
 from django.contrib import messages
 from utils.analytics import category_percent, category_count, keyword_trends
-import random, json, copy
 from utils.crawler_spider import social_media_scrape
-
+from utils.news import news
+import random, json, copy
+from django.http import JsonResponse
 
 
 @login_required
 def index(request):
-    """ """
+    """
+    :param request:
+    :return: Home Page
+    """
     userprofile = UserProfile.objects.get_or_create(user=request.user)[0]
     category = Category.objects.all()
     notifications = Notifications.objects.filter(user=userprofile).order_by("-pub_date")
@@ -30,10 +34,15 @@ def index(request):
     context["cat_percent"] = category_percent(request.user)
 
     return render(request, "crawler/index.html", context=context)
+    # return HttpResponse(context)
 
 
 @login_required
 def crawler_index(request):
+    """
+    :param request:
+    :return: Crawler Page
+    """
     context = dict()
     userprofile = UserProfile.objects.get_or_create(user=request.user)
     notifications = Notifications.objects.filter(user=userprofile).order_by("-pub_date")
@@ -113,3 +122,41 @@ def social(request):
         scrape_data = social_media_scrape(keyword)
         context = {"scrape_data": scrape_data}
         return render(None, "crawler/sociale.html", context=context)
+
+
+@login_required
+def test(request):
+    """
+
+    :param request:
+    :return: Beta Testing
+    """
+    userprofile = UserProfile.objects.filter(user=request.user)[0]
+    context = dict()
+    context["userprofile"] = userprofile
+    return render(request, "crawler/result.html", context)
+
+
+@login_required
+def calendar(request, keyword):
+    """
+
+    :param request:
+    :param keyword:
+    :return: Falcon Custom API
+    """
+    temp = dict()
+    result = news(keyword)
+    userprofile=UserProfile.objects.filter(user=request.user)[0]
+    key = Keyword.objects.get(name=keyword)
+    crawled_links = CrawledLinks.objects.filter(userprofile=userprofile, link__keyword= key)
+
+    for link in crawled_links:
+        temp[link.link.link] = link.link.scrape_data
+    
+    temp["summarized data"] = result
+    data = {
+        keyword: temp
+    }
+
+    return JsonResponse(data)

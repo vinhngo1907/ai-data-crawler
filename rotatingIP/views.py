@@ -2,6 +2,7 @@ from django.shortcuts import HttpResponse
 from rotatingIP.models import IPLink, IP
 from rotatingIP.tasks import get_proxies, save_proxy
 
+
 def index(request):
     """
     :param request:
@@ -15,6 +16,3 @@ def index(request):
             save_proxy.delay(proxy)
 
     return HttpResponse("success")
-
-
-
