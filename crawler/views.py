@@ -5,7 +5,7 @@ from scheduler.models import ScrapedLink
 from django.db.models import Count
 from django.contrib import messages
 from utils.analytics import category_percent, category_count, keyword_trends
-from utils.crawler_spider import social_media_scrape
+# from utils.crawler_spider import social_media_scrape
 from utils.news import news
 import random, json, copy
 from django.http import JsonResponse
@@ -115,13 +115,13 @@ def report(request):
     return render(request, "crawler/report.html", context=render_dict)
 
 
-@login_required
-def social(request):
-    if request.method == "POST":
-        keyword = request.POST.get("keyword")
-        scrape_data = social_media_scrape(keyword)
-        context = {"scrape_data": scrape_data}
-        return render(None, "crawler/social.html", context=context)
+# @login_required
+# def social(request):
+#     if request.method == "POST":
+#         keyword = request.POST.get("keyword")
+#         scrape_data = social_media_scrape(keyword)
+#         context = {"scrape_data": scrape_data}
+#         return render(None, "crawler/social.html", context=context)
 
 
 @login_required

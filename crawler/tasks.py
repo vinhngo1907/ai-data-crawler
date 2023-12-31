@@ -8,7 +8,7 @@ from crawler.models import (
     SocialMedia,
 )
 from django.contrib.auth.models import User
-from utils.crawler_spider import social_media_scrape
+# from utils.crawler_spider import social_media_scrape
 from scheduler.models import ScrapedLink
 
 
@@ -42,20 +42,20 @@ def save_models(query, cat, link, scrape_data, reschedule, username):
     userprofile.save()
 
 
-@shared_task
-def scrape_social(keyword):
-    key = Keyword.objects.get(name=keyword)
-    scrape_data = social_media_scrape(keyword)
-    for tweets in scrape_data:
-        social = SocialMedia.objects.get_or_create(
-            keyword=key,
-            timestamp=tweets.timestamp,
-            screen_name=tweets.screen_name,
-            username=tweets.username,
-            tweet_url=tweets.tweet_url,
-            text=tweets.text,
-            hashtags=tweets.hashtags,
-            likes=tweets.likes,
-            retweets=tweets.retweets,
-        )[0]
-        social.save()
+# @shared_task
+# def scrape_social(keyword):
+#     key = Keyword.objects.get(name=keyword)
+#     scrape_data = social_media_scrape(keyword)
+#     for tweets in scrape_data:
+#         social = SocialMedia.objects.get_or_create(
+#             keyword=key,
+#             timestamp=tweets.timestamp,
+#             screen_name=tweets.screen_name,
+#             username=tweets.username,
+#             tweet_url=tweets.tweet_url,
+#             text=tweets.text,
+#             hashtags=tweets.hashtags,
+#             likes=tweets.likes,
+#             retweets=tweets.retweets,
+#         )[0]
+#         social.save()

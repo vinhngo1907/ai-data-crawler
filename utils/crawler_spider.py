@@ -1,7 +1,7 @@
 import requests, re, random, datetime as dt
 from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
-from twitterscraper import query_tweets
+# from twitterscraper import query_tweets
 from ast import literal_eval
 
 # api_key = "AIzaSyA-xf1iJjNQCELDVGDtYJ7aM0t1ZulB0kQ"
@@ -85,13 +85,13 @@ def scraper(link):
         return metadata
 
 
-def social_media_scrape(keyword):
-    result = {}
-    temp = {}
-    base_url = "twitter.com"
-    query = str(keyword) + " " + keywords[0]
-    tweets = query_tweets(query, limit=1, begindate=dt.date(2023, 6, 21))
-    return tweets
+# def social_media_scrape(keyword):
+#     result = {}
+#     temp = {}
+#     base_url = "twitter.com"
+#     query = str(keyword) + " " + keywords[0]
+#     tweets = query_tweets(query, limit=1, begindate=dt.date(2023, 6, 21), proxy=None)
+#     return tweets
 
 
 def extract_image(data):
