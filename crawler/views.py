@@ -6,6 +6,8 @@ from django.db.models import Count
 from django.contrib import messages
 from utils.analytics import category_percent, category_count, keyword_trends
 import random, json, copy
+from utils.crawler_spider import social_media_scrape
+
 
 
 @login_required
@@ -82,17 +84,32 @@ def report(request):
     unread = notifications.filter(read=False)
     categories = [i.name for i in Category.objects.all()]
     crawled_links = CrawledLinks.objects.filter(user=userprofile)
-    unique_keywords = list(crawled_links.values_list('link__keyword__name', flat=True).distinct())
+    unique_keywords = list(
+        crawled_links.values_list("link__keyword__name", flat=True).distinct()
+    )
     for keyword in unique_keywords:
         for category in categories:
-            temp[category] = CrawledLinks.objects.filter(userprofile=userprofile,  link__keyword__name=keyword, link__category__name=category)
+            temp[category] = CrawledLinks.objects.filter(
+                userprofile=userprofile,
+                link__keyword__name=keyword,
+                link__category__name=category,
+            )
         context[keyword] = temp
-    
+
     print(context)
-    render_dict['report'] = True
-    render_dict['category'] = category
-    render_dict['userprofile'] = userprofile
-    render_dict['notifications'] = notifications[:5]
-    render_dict['unread_count'] = len(unread)
-    render_dict['data'] = context
+    render_dict["report"] = True
+    render_dict["category"] = category
+    render_dict["userprofile"] = userprofile
+    render_dict["notifications"] = notifications[:5]
+    render_dict["unread_count"] = len(unread)
+    render_dict["data"] = context
     return render(request, "crawler/report.html", context=render_dict)
+
+
+@login_required
+def social(request):
+    if request.method == "POST":
+        keyword = request.POST.get("keyword")
+        scrape_data = social_media_scrape(keyword)
+        context = {"scrape_data": scrape_data}
+        return render(None, "crawler/sociale.html", context=context)
