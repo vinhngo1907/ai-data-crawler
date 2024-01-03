@@ -3,7 +3,6 @@ import json
 
 register = template.Library()
 
-
 @register.filter(name="change_string")
 def change_string(value):
     return value.replace("_", " ").title()
