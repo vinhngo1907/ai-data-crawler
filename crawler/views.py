@@ -160,3 +160,22 @@ def calendar(request, keyword):
     }
 
     return JsonResponse(data)
+
+@login_required
+def process(request):
+    """
+    :param request:
+    :return: Result page
+    """
+    if(request.method == "POST"):
+        userprofile = UserProfile.objects.get(user=request.user)[0]
+        notifications = Notifications.objects.filter(user=userprofile).order_by("-pub_date")
+        unread = notifications.filter(read=False)
+        main_search = request.POST.get("main_search")
+
+        context = dict()
+        context["userprofile"] = userprofile
+        context["notifications"] = notifications[:5]
+        context["unread"] = len(unread)
+        
+        return render(None, "crawler/process.html", context=context)

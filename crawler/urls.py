@@ -11,4 +11,6 @@ urlpatterns = [
     path("calendar/", views.calendar, name="calendar"),
     # path("social-scrape-data/", views.social, name="social"),
     path('scheduler/', include('scheduler.urls'), name='scheduler'),
+     path('test/', views.test, name='test'),
+    path("result/", view=views.process, name="process")
 ]
