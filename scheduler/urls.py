@@ -1,6 +1,8 @@
 from scheduler import views
 from django.urls import path, include
 
+app_name = 'scheduler'
+
 urlpatterns = [
     path('', view=views.index, name='index'),
     path('search-link/', views.search, name='search'),
