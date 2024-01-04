@@ -5,8 +5,8 @@ from googleapiclient.discovery import build
 from ast import literal_eval
 
 # api_key = "AIzaSyA-xf1iJjNQCELDVGDtYJ7aM0t1ZulB0kQ"
-api_key = "AIzaSyCuJiO5AOoeVIyYY0k0fd5Jzjk4gYSFWug"
-cse_id = "016133495723645302024:cfibqauizrm"
+api_key = ""
+cse_id = ""
 
 
 def google_query(query, **kwargs):
