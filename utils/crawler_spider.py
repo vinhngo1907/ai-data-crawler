@@ -4,7 +4,6 @@ from googleapiclient.discovery import build
 # from twitterscraper import query_tweets
 from ast import literal_eval
 
-# api_key = "AIzaSyA-xf1iJjNQCELDVGDtYJ7aM0t1ZulB0kQ"
 api_key = ""
 cse_id = ""
 
