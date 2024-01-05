@@ -6,7 +6,7 @@ from django.db.models import Count
 from django.contrib import messages
 from utils.analytics import category_percent, category_count, keyword_trends
 
-# from utils.crawler_spider import social_media_scrape
+from utils.crawler_spider import social_media_scrape, crawling
 from utils.news import news
 import random, json, copy
 from django.http import JsonResponse
@@ -230,7 +230,9 @@ def process(request):
 
         for keyword in main_search_list:
             query = Keyword.objects.get_or_create()
-            
+            query.save()
+            pipeline_result = crawling()
+
         context = {
            'home': True,
             'userprofile': userprofile,

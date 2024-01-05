@@ -57,7 +57,7 @@ def crawling(query, keywords):
         rape,
         cyber_bullying,
     ]
-    
+
     scrape_lists = [
         general_scrape,
         crime_scrape,
@@ -152,13 +152,14 @@ def scraper(link):
         return metadata
 
 
-# def social_media_scrape(keyword):
-#     result = {}
-#     temp = {}
-#     base_url = "twitter.com"
-#     query = str(keyword) + " " + keywords[0]
-#     tweets = query_tweets(query, limit=1, begindate=dt.date(2023, 6, 21), proxy=None)
-#     return tweets
+def social_media_scrape(keyword):
+    result = {}
+    temp = {}
+    base_url = "twitter.com"
+    query = str(keyword) + " " + keywords[0]
+    # tweets = query_tweets(query, limit=1, begindate=dt.date(2023, 6, 21), proxy=None)
+    # return tweets
+    return True
 
 
 def extract_image(data):
