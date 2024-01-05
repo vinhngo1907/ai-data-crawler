@@ -5,7 +5,7 @@ from scheduler.models import ScrapedLink, RescrapedLink
 
 
 @shared_task
-def rescrape_one(old_link, new_data):
+def rescrape_save(old_link, new_data):
     check = Score()
     old_data = ScrapedLink.objects.get(link=old_link)
     score = check.total_score(old_data.scrape_data, new_data)
@@ -18,3 +18,10 @@ def rescrape_one(old_link, new_data):
         done = True
 
     return done
+
+
+def rescrape_one():
+    check = Score()
+    old_link = ScrapedLink.objects.all().first()
+    new_data = scraper(old_link)
+    

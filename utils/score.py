@@ -12,3 +12,6 @@ class Score:
         for k, v in new_o.items():
             new_o[k] = self.make_hash(o)
         return hash(tuple(frozenset(sorted(new_o.items()))))
+
+    def total_score(self, a, b):
+        return 0
