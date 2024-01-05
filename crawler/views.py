@@ -144,7 +144,23 @@ def test(request):
 
 
 @login_required
-def calendar(request, keyword):
+def calendar(request):
+    context = dict()
+    userprofile = UserProfile.objects.get_or_create(user=request.user)[0]
+    categories = Category.objects.all()
+    notifications = Notifications.objects.filter(user=userprofile).order_by("-pub_date")
+    unread = notifications.filter(read=False)
+    context["calendar"] = True
+    context["category"] = categories
+    context["userprofile"] = userprofile
+    context["notifications"] = notifications[:5]
+    context["unread"] = len(unread)
+
+    return render(request, "crawler/calendar.html", context)
+
+
+@login_required
+def api(request, keyword):
     """
 
     :param request:
