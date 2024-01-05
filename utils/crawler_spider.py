@@ -26,49 +26,98 @@ def google_query(query, **kwargs):
 
 keywords = ["Crime", "Child Abuse", "Women Abuse", "Cyber Bullying"]
 
-# def crawling(query, keyword):
-#     """
-#     :param query:
-#     :param keywords:
-#     :return: crawled links, scrape data
-#     """
-#     general = list()
-#     crime = list()
-#     child_abuse = list()
-#     women_abuse = list()
-#     pornography = list()
-#     rape = list()
-#     cyber_bullying = list()
-#     general_scrape = list()
-#     crime_scrape = list()
-#     child_abuse_scrape = list()
-#     women_abuse_scrape = list()
-#     pornography_scrape = list()
-#     rape_scrape = list()
-#     cyber_bullying_scrape = list()
 
-#     contenxt = {
-#         "general": general,
-#         "crime": crime,
-#         "child abuse": child_abuse,
-#         "woman abuse": women_abuse,
-#         "cyber_bullying": cyber_bullying,
-#     }
-#     reduced = [
-#         general[:4],
-#         crime[:4],
-#         child_abuse[:4],
-#         women_abuse[:4],
-#         cyber_bullying[:4],
-#     ]
+def crawling(query, keywords):
+    """
+    :param query:
+    :param keywords:
+    :return: crawled links, scrape data
+    """
+    general = list()
+    crime = list()
+    child_abuse = list()
+    women_abuse = list()
+    pornography = list()
+    rape = list()
+    cyber_bullying = list()
+    general_scrape = list()
+    crime_scrape = list()
+    child_abuse_scrape = list()
+    women_abuse_scrape = list()
+    pornography_scrape = list()
+    rape_scrape = list()
+    cyber_bullying_scrape = list()
 
-#     reduced2 = [
-#         general_scrape[:4],
-#         crime_scrape[:4],
-#         child_abuse_scrape[:4],
-#         women_abuse_scrape[:4],
-#         cyber_bullying_scrape[:4],
-#     ]
+    lists = [
+        general,
+        crime,
+        child_abuse,
+        women_abuse,
+        pornography,
+        rape,
+        cyber_bullying,
+    ]
+    
+    scrape_lists = [
+        general_scrape,
+        crime_scrape,
+        child_abuse_scrape,
+        women_abuse_scrape,
+        pornography_scrape,
+        rape_scrape,
+        cyber_bullying_scrape,
+    ]
+
+    base_search_url = "https://www.google.co.in/search?q="
+
+    for keyword, list_update, list_update2 in zip(keywords, lists, scrape_lists):
+        try:
+            num = random.randint(7, 10)
+            pages = google_query(f"{query} {keyword}", num=num)
+            for result in pages:
+                list_update.append((result["link"], result))
+                list_update2.append(result["link"])
+        except:
+            print("bs4 algo running...")
+            empty = dict()
+            page = requests.get(base_search_url)
+            soup = BeautifulSoup(page.content, "html.parser")
+            links = soup.findAll("a")
+            result_div = soup.find_all(
+                "a", href=re.compile("(?<=/url\?q=)(htt.*://.*)")
+            )
+            for link in result_div:
+                print("here")
+                link = re.split(":(?=http)", link["href"].replace("/url?q=", ""))
+                x = str(link).split("&")
+                empty = scraper(x[0].replace("['", ""))
+                list_update.append((x[0].replace("['", ""), empty))
+                list_update2.append(x[0].replace("['", ""))
+
+    context = {
+        "general": general,
+        "crime": crime,
+        "child abuse": child_abuse,
+        "woman abuse": women_abuse,
+        "cyber_bullying": cyber_bullying,
+    }
+    reduced = [
+        general[:4],
+        crime[:4],
+        child_abuse[:4],
+        women_abuse[:4],
+        cyber_bullying[:4],
+    ]
+
+    reduced2 = [
+        general_scrape[:4],
+        crime_scrape[:4],
+        child_abuse_scrape[:4],
+        women_abuse_scrape[:4],
+        cyber_bullying_scrape[:4],
+    ]
+
+    return context, reduced, reduced2, lists
 
 
 def scraper(link):
