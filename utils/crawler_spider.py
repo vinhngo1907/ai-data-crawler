@@ -138,6 +138,28 @@ def wiki_scraping(link):
     empty = True
     if page.status_code is 200:
         print("first success")
+        soup = BeautifulSoup(page.content, "html.parser")
+        try:
+            empty = False
+            table = soup.select(".infobox")[0]
+            rows = table.find_all("tr")
+            flag = 1
+            i = 0
+            length = len(rows)
+            for i in range(length):
+                try:
+                    if i == 0:
+                        infobox["name"] = str(rows[i].th.text)
+                        flag = 0
+                    else:
+                        infobox[str(rows[i].th.text)] = str(rows[i].td.text)
+                except:
+                    pass
+        except:
+            empty = True
+    else:
+        print("Can't reach to servers")
+    return infobox, empty
 
 
 def scraper(link):
