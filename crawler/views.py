@@ -47,7 +47,6 @@ def crawler_index(request):
 
     context = dict()
     userprofile = UserProfile.objects.get(user=request.user)
-    print(userprofile)
     notifications = Notifications.objects.filter(user=userprofile).order_by("-pub_date")
     unread = notifications.filter(read=False)
     categories = [i.name for i in Category.objects.all()]
@@ -88,15 +87,20 @@ def report(request):
     context = dict()
     render_dict = dict()
     temp = dict()
+
     category = Category.objects.all()
+    
     userprofile = UserProfile.objects.get(user=request.user)
-    notifications = Notifications.objects.filter(user=userprofile)
+    
+    notifications = Notifications.objects.filter(user=userprofile).order_by("-pub_date")
     unread = notifications.filter(read=False)
+    
     categories = [i.name for i in Category.objects.all()]
     crawled_links = CrawledLinks.objects.filter(user=userprofile)
     unique_keywords = list(
         crawled_links.values_list("link__keyword__name", flat=True).distinct()
     )
+    
     for keyword in unique_keywords:
         for category in categories:
             temp[category] = CrawledLinks.objects.filter(
@@ -106,7 +110,9 @@ def report(request):
             )
         context[keyword] = temp
 
+    
     print(context)
+
     render_dict["report"] = True
     render_dict["category"] = category
     render_dict["userprofile"] = userprofile
