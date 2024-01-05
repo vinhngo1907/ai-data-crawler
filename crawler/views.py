@@ -5,6 +5,7 @@ from scheduler.models import ScrapedLink
 from django.db.models import Count
 from django.contrib import messages
 from utils.analytics import category_percent, category_count, keyword_trends
+
 # from utils.crawler_spider import social_media_scrape
 from utils.news import news
 import random, json, copy
@@ -43,15 +44,15 @@ def crawler_index(request):
     :param request:
     :return: Crawler Page
     """
+
     context = dict()
-    userprofile = UserProfile.objects.get_or_create(user=request.user)
+    userprofile = UserProfile.objects.get(user=request.user)
+    print(userprofile)
     notifications = Notifications.objects.filter(user=userprofile).order_by("-pub_date")
     unread = notifications.filter(read=False)
     categories = [i.name for i in Category.objects.all()]
     crawled_links = CrawledLinks.objects.order_by("-pub_date")
-    user_crawled_links = CrawledLinks.objects.filter(userprofile=userprofile).order_by(
-        "-pub_date"
-    )
+
     unique_keyword = list(
         crawled_links.filter(userprofile=userprofile)
         .order_by()
@@ -62,7 +63,6 @@ def crawler_index(request):
     random.shuffle(copy_keyword)
 
     keyword_labels, keywords_dataset = keyword_trends(copy_keyword[1:6])
-    print(category_count(request.user))
 
     context["crawler_home"] = True
     context["userprofile"] = userprofile
@@ -70,9 +70,10 @@ def crawler_index(request):
     context["unread_count"] = len(unread)
     context["crawler_links"] = crawled_links
     context["categories"] = categories
+    context["category_data"] = category_count(request.user)
     context["unique_keyword"] = unique_keyword
-    context["keyword_labels"] = keyword_labels
-    context["keyword_dataset"] = keywords_dataset
+    context["keywords_labels"] = keyword_labels
+    context["keywords_dataset"] = keywords_dataset
 
     return render(request, "crawler/crawler.html", context=context)
 
@@ -147,19 +148,20 @@ def calendar(request, keyword):
     """
     temp = dict()
     result = news(keyword)
-    userprofile=UserProfile.objects.filter(user=request.user)[0]
+    userprofile = UserProfile.objects.filter(user=request.user)[0]
     key = Keyword.objects.get(name=keyword)
-    crawled_links = CrawledLinks.objects.filter(userprofile=userprofile, link__keyword= key)
+    crawled_links = CrawledLinks.objects.filter(
+        userprofile=userprofile, link__keyword=key
+    )
 
     for link in crawled_links:
         temp[link.link.link] = link.link.scrape_data
-    
+
     temp["summarized data"] = result
-    data = {
-        keyword: temp
-    }
+    data = {keyword: temp}
 
     return JsonResponse(data)
+
 
 @login_required
 def process(request):
@@ -167,9 +169,11 @@ def process(request):
     :param request:
     :return: Result page
     """
-    if(request.method == "POST"):
+    if request.method == "POST":
         userprofile = UserProfile.objects.get(user=request.user)[0]
-        notifications = Notifications.objects.filter(user=userprofile).order_by("-pub_date")
+        notifications = Notifications.objects.filter(user=userprofile).order_by(
+            "-pub_date"
+        )
         unread = notifications.filter(read=False)
         main_search = request.POST.get("main_search")
 
@@ -177,5 +181,5 @@ def process(request):
         context["userprofile"] = userprofile
         context["notifications"] = notifications[:5]
         context["unread"] = len(unread)
-        
+
         return render(None, "crawler/process.html", context=context)
