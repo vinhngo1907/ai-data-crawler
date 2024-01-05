@@ -16,4 +16,5 @@ urlpatterns = [
     path("update/", view=views.update, name="update"),
     path("update-notifications/", view=views.update_notifications, name="update_notifications"),
     path("update-notifications-base/", view=views.update_notifications_base, name="update_notifications_base"),
+    path('falcon-api/<str:keyword>/', views.api, name='api'),
 ]
