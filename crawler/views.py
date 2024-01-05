@@ -95,8 +95,11 @@ def report(request):
     notifications = Notifications.objects.filter(user=userprofile).order_by("-pub_date")
     unread = notifications.filter(read=False)
 
+    crawled_links = CrawledLinks.objects.filter(userprofile=userprofile).order_by(
+        "pub_date"
+    )
     categories = [i.name for i in Category.objects.all()]
-    crawled_links = CrawledLinks.objects.filter(user=userprofile)
+
     unique_keywords = list(
         crawled_links.values_list("link__keyword__name", flat=True).distinct()
     )
