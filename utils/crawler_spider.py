@@ -120,6 +120,26 @@ def crawling(query, keywords):
     return context, reduced, reduced2, lists
 
 
+def count_items(context):
+    list_count_dict = dict()
+    temp = list()
+    for key, value in context.items():
+        for key2, value2 in value.items():
+            temp.append(len(value2))
+        list_count_dict[key] = temp
+        temp = []
+    return list_count_dict
+
+
+def wiki_scraping(link):
+    print("scraping")
+    page = requests.get(str(link.split("%")[0]))
+    infobox = dict()
+    empty = True
+    if page.status_code is 200:
+        print("first success")
+
+
 def scraper(link):
     """
 
