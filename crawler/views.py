@@ -200,11 +200,61 @@ def process(request):
         )
         unread = notifications.filter(read=False)
         main_search = request.POST.get("main_search")
+        filters = request.POST.get("main_search")
+        reschedule_crawler = request.POST.get("reschedule_crawler")
+        main_search_list = [x.strip(" ") for x in main_search.split(",")]
+        filters_list = [x.strip(" ") for x in filters.split(",")]
 
-        context = dict()
-        context["userprofile"] = userprofile
-        context["notifications"] = notifications[:5]
-        context["unread"] = len(unread)
+        result1 = dict()
+        result2 = dict()
+        result3 = dict()
+        result4 = dict()
+        news_data1 = dict()
+        news_data2 = dict()
+        list1 = list()
+        list2 = list()
+        
+        temp_list1 = list()
+        wiki_links = list()
+        video_links = list()
+        pdfs = list()
+        iamges = list()
+        scrape_data = ""
+        no_of_links = 0
+        no_of_scrape = 0
+        wiki_scrape_temp = dict()
+        scrape_data_dict = dict()
+        scrape_data_dict_main = dict()
+        colors = ["#111", "#f59042", "#555644", "#444"]
+        print(filters_list)
+
+        for keyword in main_search_list:
+            query = Keyword.objects.get_or_create()
+            
+        context = {
+           'home': True,
+            'userprofile': userprofile,
+            'notifications': notifications[:5],
+            'unread_count': len(unread),
+            'labels': filters_list,
+            # 'result1': result2,
+            # 'result2': result4,
+            'list1': list1,
+            'list2': list2,
+            # 'count_list1': count_list1,
+            # 'count_list2': count_list2,
+            'temp_list1': temp_list1,
+            'random_colors': colors,
+            'news_data1': news_data1,
+            'news_data2': news_data2,
+            'wikis': wiki_scrape_temp,
+            'main_search_list': main_search_list,
+            'video_links': list(set(video_links))[:5],
+            'pdfs': pdfs,
+            'scrape_data_dict_main': scrape_data_dict_main,
+            # 'images': images_updated,
+            # 'image_predict': image_predict
+       }
 
         return render(None, "crawler/process.html", context=context)
 
