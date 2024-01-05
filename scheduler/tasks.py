@@ -24,4 +24,14 @@ def rescrape_one():
     check = Score()
     old_link = ScrapedLink.objects.all().first()
     new_data = scraper(old_link)
-    
+    old_data = old_link.scrape_data
+    format_data = {"result": old_data}
+    done = False
+    score = check.total_score(format_data, new_data)
+    if score > 0:
+        rescrape = RescrapedLink.objects.get(
+            link=old_link, scrape_data=new_data, score=score, done=True
+        )
+        rescrape.save()
+        done = True
+    return done, score

@@ -1,6 +1,7 @@
 import requests, re, random, datetime as dt
 from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
+
 # from twitterscraper import query_tweets
 from ast import literal_eval
 
@@ -80,7 +81,25 @@ def scraper(link):
     if "youtube" in str(link):
         return {}
     else:
+        page = requests.get(str(link))
+        soup = BeautifulSoup(page.content, "html.parser")
         metadata = dict()
+        for tag in soup.find_all("meta"):
+            name = tag.attrs.get("name")
+            property = tag.attrs.get("property")
+            content = tag.attrs.get("content")
+            if name or property:
+                if name:
+                    if ":":
+                        names = name.split(":")
+                        name = names[1]
+                    metadata[name] = content
+                else:
+                    if ":" in property:
+                        props = property.split(":")
+                        property = props[1]
+                    metadata[property] = content
+        print(metadata)
         return metadata
 
 
