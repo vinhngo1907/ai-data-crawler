@@ -89,18 +89,18 @@ def report(request):
     temp = dict()
 
     category = Category.objects.all()
-    
+
     userprofile = UserProfile.objects.get(user=request.user)
-    
+
     notifications = Notifications.objects.filter(user=userprofile).order_by("-pub_date")
     unread = notifications.filter(read=False)
-    
+
     categories = [i.name for i in Category.objects.all()]
     crawled_links = CrawledLinks.objects.filter(user=userprofile)
     unique_keywords = list(
         crawled_links.values_list("link__keyword__name", flat=True).distinct()
     )
-    
+
     for keyword in unique_keywords:
         for category in categories:
             temp[category] = CrawledLinks.objects.filter(
@@ -110,7 +110,6 @@ def report(request):
             )
         context[keyword] = temp
 
-    
     print(context)
 
     render_dict["report"] = True
@@ -189,3 +188,23 @@ def process(request):
         context["unread"] = len(unread)
 
         return render(None, "crawler/process.html", context=context)
+
+
+@login_required
+def update(request):
+    return True
+
+
+@login_required
+def update_notifications(request):
+    return True
+
+
+@login_required
+def update_notifications_base(request):
+    return True
+
+
+@login_required
+def read(request):
+    return True
