@@ -1,12 +1,15 @@
-import requests, re, random, datetime as dt
+import os, requests, re, random, datetime as dt
 from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
+from dotenv import load_dotenv, dotenv_values
 
 # from twitterscraper import query_tweets
-from ast import literal_eval
+# from ast import literal_eval
 
-api_key = ""
-cse_id = ""
+config = dotenv_values("../.env")
+
+api_key = config["API_KEY"]
+cse_id = config["CSE_ID"]
 
 
 def google_query(query, **kwargs):
