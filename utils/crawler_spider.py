@@ -83,7 +83,7 @@ def crawling(query, keywords):
         except:
             print("bs4 algo running...")
             empty = dict()
-            page = requests.get(base_search_url)
+            page = requests.get(base_search_url + query + keyword)
             soup = BeautifulSoup(page.content, "html.parser")
             links = soup.findAll("a")
             result_div = soup.find_all(
@@ -102,8 +102,9 @@ def crawling(query, keywords):
         "crime": crime,
         "child abuse": child_abuse,
         "woman abuse": women_abuse,
-        "cyber_bullying": cyber_bullying,
+        "cyber bullying": cyber_bullying,
     }
+
     reduced = [
         general[:4],
         crime[:4],
