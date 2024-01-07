@@ -8,6 +8,7 @@ from crawler.models import (
     SocialMedia,
 )
 from django.contrib.auth.models import User
+
 # from utils.crawler_spider import social_media_scrape
 from scheduler.models import ScrapedLink
 
@@ -16,12 +17,11 @@ from scheduler.models import ScrapedLink
 def save_models(query, cat, link, scrape_data, reschedule, username):
     no_of_links = 0
     user = User.objects.get(username=username)
-    userprofile = UserProfile.objects.filter(user=user)
+    userprofile = UserProfile.objects.get(user=user)
     keyword = Keyword.objects.get(name=query)
     category = Category.objects.get(name=cat)
-
     scraped_link = ScrapedLink.objects.get_or_create(
-        link=link, category=category, scrape_data=scrape_data
+        link=link, scrape_data=scrape_data, schedule_day=reschedule
     )[0]
     scraped_link.save()
 

@@ -6,7 +6,7 @@ from dotenv import load_dotenv, dotenv_values
 # from twitterscraper import query_tweets
 # from ast import literal_eval
 
-config = dotenv_values("../.env")
+config = dotenv_values(".env")
 
 api_key = config["API_KEY"]
 cse_id = config["CSE_ID"]
@@ -224,7 +224,7 @@ def social_media_scrape(keyword):
     return True
 
 
-def extract_image(data):
+def extract_images(data):
     print("exttracting images", data)
     try:
         image = data["pagemap"]["metatags"][0]["og:image"]

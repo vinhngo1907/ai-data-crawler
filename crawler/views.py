@@ -1,12 +1,18 @@
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 from crawler.models import UserProfile, Notifications, Category, CrawledLinks, Keyword
+from crawler.tasks import save_models
 from scheduler.models import ScrapedLink
 from django.db.models import Count
 from django.contrib import messages
 from utils.analytics import category_percent, category_count, keyword_trends
 
-from utils.crawler_spider import social_media_scrape, crawling
+from utils.crawler_spider import (
+    social_media_scrape,
+    crawling,
+    extract_images,
+    wiki_scraping,
+)
 from utils.news import news
 import random, json, copy
 from django.http import JsonResponse
@@ -198,10 +204,13 @@ def process(request):
         notifications = Notifications.objects.filter(user=userprofile).order_by(
             "-pub_date"
         )
+
         unread = notifications.filter(read=False)
         main_search = request.POST.get("main_search")
-        filters = request.POST.get("main_search")
+        filters = request.POST["multiple_select"]
         reschedule_crawler = request.POST.get("reschedule_crawler")
+        print(type(main_search), type(filters))
+
         main_search_list = [x.strip(" ") for x in main_search.split(",")]
         filters_list = [x.strip(" ") for x in filters.split(",")]
 
@@ -213,12 +222,11 @@ def process(request):
         news_data2 = dict()
         list1 = list()
         list2 = list()
-        
         temp_list1 = list()
         wiki_links = list()
         video_links = list()
         pdfs = list()
-        iamges = list()
+        images = list()
         scrape_data = ""
         no_of_links = 0
         no_of_scrape = 0
@@ -226,37 +234,67 @@ def process(request):
         scrape_data_dict = dict()
         scrape_data_dict_main = dict()
         colors = ["#111", "#f59042", "#555644", "#444"]
+        print(result1)
         print(filters_list)
 
         for keyword in main_search_list:
             query = Keyword.objects.get_or_create()
             query.save()
-            pipeline_result = crawling()
+            pipeline_result = crawling(keyword, filters_list)[2]
+
+            for category, links in zip(filters_list, pipeline_result):
+                cat = Category.objects.get_or_create(name=category)
+
+                for link in links:
+                    print(link[0])
+                    if "wikipedia" in link[0]:
+                        scrape_data, empty = wiki_scraping(link[0])
+                        no_of_scrape += 1
+                        wiki_links.append(link[0])
+                        if not empty:
+                            wiki_scrape_temp[str(link)] = scrape_data
+                    elif link[0].endsWith("pdf"):
+                        pdfs.append(link[0])
+                    elif "youtube" in link[0]:
+                        video_links.append(link[0])
+                    else:
+                        scrape_data = link[1]
+                        images.append(extract_images(extract_images(scrape_data)))
+                    scrape_data_dict[link[0]] = scrape_data
+                    save_models.delay(
+                        query.name,
+                        cat.name,
+                        link[0],
+                        scrape_data,
+                        reschedule_crawler,
+                        userprofile.username,
+                    )
+            scrape_data_dict_main[keyword] = scrape_data_dict
 
         context = {
-           'home': True,
-            'userprofile': userprofile,
-            'notifications': notifications[:5],
-            'unread_count': len(unread),
-            'labels': filters_list,
+            "home": True,
+            "userprofile": userprofile,
+            "notifications": notifications[:5],
+            "unread_count": len(unread),
+            "labels": filters_list,
             # 'result1': result2,
             # 'result2': result4,
-            'list1': list1,
-            'list2': list2,
+            "list1": list1,
+            "list2": list2,
             # 'count_list1': count_list1,
             # 'count_list2': count_list2,
-            'temp_list1': temp_list1,
-            'random_colors': colors,
-            'news_data1': news_data1,
-            'news_data2': news_data2,
-            'wikis': wiki_scrape_temp,
-            'main_search_list': main_search_list,
-            'video_links': list(set(video_links))[:5],
-            'pdfs': pdfs,
-            'scrape_data_dict_main': scrape_data_dict_main,
+            "temp_list1": temp_list1,
+            "random_colors": colors,
+            "news_data1": news_data1,
+            "news_data2": news_data2,
+            "wikis": wiki_scrape_temp,
+            "main_search_list": main_search_list,
+            "video_links": list(set(video_links))[:5],
+            "pdfs": pdfs,
+            "scrape_data_dict_main": scrape_data_dict_main,
             # 'images': images_updated,
             # 'image_predict': image_predict
-       }
+        }
 
         return render(None, "crawler/process.html", context=context)
 
