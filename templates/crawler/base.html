@@ -1,6 +1,5 @@
-{%load static %}
-{%load crawlerapp_filter %}
-
+{% load static %}
+{% load crawlerapp_filter %}
 
 <html lang="en">
 
@@ -198,7 +197,8 @@
                             <img src="{{ userprofile.picture.url }}" alt="" class="mw-100 mh-100 rounded-circle" />
                         </div>
                         <div class="menu-text"><span class="__cf_email__"
-                                data-cfemail="7704121619031f121a1237101a161e1b5914181a">{{userprofile.user.username|capfirst }}</span>
+                                data-cfemail="7704121619031f121a1237101a161e1b5914181a">{{
+                                userprofile.user.username|capfirst }}</span>
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right mr-lg-3">
@@ -225,7 +225,8 @@
                     <div class="menu-item {% if home %}active{% endif %}">
                         <a href="{% url 'crawler:index' %}" class="menu-link">
                             <span class="menu-icon"><i class="fa fa-laptop"></i></span>
-                            <span class="menu-text">{% if request.path == '/result/' %}Result{% else %}Dashboard{% endif %}</span>
+                            <span class="menu-text">{% if request.path == '/result/' %}Result{% else %}Dashboard{% endif
+                                %}</span>
                         </a>
                     </div>
                     <div class="menu-item {% if report %}active{% endif %}">
