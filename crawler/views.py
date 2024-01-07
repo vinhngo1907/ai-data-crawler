@@ -6,12 +6,13 @@ from scheduler.models import ScrapedLink
 from django.db.models import Count
 from django.contrib import messages
 from utils.analytics import category_percent, category_count, keyword_trends
-
+from utils.image_processing import category_predict
 from utils.crawler_spider import (
     social_media_scrape,
     crawling,
     extract_images,
     wiki_scraping,
+    count_items
 )
 from utils.news import news
 import random, json, copy
@@ -270,6 +271,34 @@ def process(request):
                         userprofile.username,
                     )
             scrape_data_dict_main[keyword] = scrape_data_dict
+
+        userprofile.scraped_data += no_of_scrape
+        userprofile.save()
+
+        if len(main_search_list) > 2:
+            list1 = main_search_list[:2]
+            list2 = main_search_list[:2]
+        else:
+            list1 = main_search_list
+        
+        for query in list1:
+            result1[query] = crawling(query, filters_list)[0]
+            temp_list1 = crawling(query, filters_list)[3]
+            news_data1[query] = news(query)
+
+        for query in list2:
+            result3[query] = crawling(query, filters_list)[0]
+            news_data2[query] = news(query)
+
+        print(temp_list1)
+
+        count_list1 = count_items(result1)
+        count_list2 = count_items(result3)
+
+        images_updated = list(filter(None, images))
+        image_predict = category_predict(images_updated)
+
+        random.shuffle(colors)
 
         context = {
             "home": True,

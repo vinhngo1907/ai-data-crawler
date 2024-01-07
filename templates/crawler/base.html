@@ -196,9 +196,10 @@
                         <div class="menu-img online">
                             <img src="{{ userprofile.picture.url }}" alt="" class="mw-100 mh-100 rounded-circle" />
                         </div>
-                        <div class="menu-text"><span class="__cf_email__"
-                                data-cfemail="7704121619031f121a1237101a161e1b5914181a">{{
-                                userprofile.user.username|capfirst }}</span>
+                        <div class="menu-text">
+                            <span class="__cf_email__" data-cfemail="7704121619031f121a1237101a161e1b5914181a">
+                                {{userprofile.user.username|capfirst }}
+                            </span>
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right mr-lg-3">
@@ -225,8 +226,9 @@
                     <div class="menu-item {% if home %}active{% endif %}">
                         <a href="{% url 'crawler:index' %}" class="menu-link">
                             <span class="menu-icon"><i class="fa fa-laptop"></i></span>
-                            <span class="menu-text">{% if request.path == '/result/' %}Result{% else %}Dashboard{% endif
-                                %}</span>
+                            <span class="menu-text">
+                                {% if request.path == '/result/' %}Result{% else %}Dashboard{% endif%}
+                            </span>
                         </a>
                     </div>
                     <div class="menu-item {% if report %}active{% endif %}">
@@ -301,14 +303,10 @@
 
 
         <div id="content" class="app-content">
-
             {% block body %}
-
 
             {% endblock %}
         </div>
-
-
         <a href="#" data-click="scroll-top" class="btn-scroll-top fade"><i class="fa fa-arrow-up"></i></a>
     </div>
 
@@ -339,9 +337,6 @@
             </div>
         </div>
     </form>
-
-
-
     {% for item in temp_list1 %}
     {% for i in item %}
     <div class="modal fade" id="modalLg_{{ forloop.counter0 }}">
@@ -371,8 +366,9 @@
         <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Link - <a href="{{ link.link.link }}" target="_blank">{{ link.link.link
-                            }}</a></h5>
+                    <h5 class="modal-title">
+                        Link - <a href="{{ link.link.link }}" target="_blank">{{ link.link.link }}</a>
+                    </h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span>×</span>
                     </button>
@@ -402,8 +398,9 @@
         <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Link - <a href="{{ link.link.link }}" target="_blank">{{ link.link.link
-                            }}</a></h5>
+                    <h5 class="modal-title">Link -
+                        <a href="{{ link.link.link }}" target="_blank">{{ link.link.link }}</a>
+                    </h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span>×</span>
                     </button>
@@ -441,10 +438,7 @@
                         src="https://ssl.gstatic.com/trends_nrtr/2213_RC01/embed_loader.js"></script>
 
                     <script type="text/javascript">
-
-
                         trends.embed.renderExploreWidget("GEO_MAP", { "comparisonItem": [{ "keyword": "{{ keyword }}", "geo": "IN", "time": "today 12-m" }], "category": 0, "property": "" }, { "exploreQuery": "geo=IN&q=munna&date=today 12-m", "guestPath": "https://trends.google.com:443/trends/embed/" });
-
                     </script>
                 </div>
                 <div class="modal-footer">
@@ -453,10 +447,7 @@
             </div>
         </div>
     </div>
-
     {% endfor %}
-
-
     <div class="modal modal-cover fade" id="details">
         <div class="modal-dialog ">
             <div class="modal-content">
@@ -512,10 +503,6 @@
             </div>
         </div>
     </div>
-
-
-
-
     <div class="toasts-container">
         <div class="toast" data-autohide="false" id="report_toast">
             {% csrf_token %}
@@ -532,13 +519,7 @@
             </div>
         </div>
     </div>
-
-
-
-
-
     {% block script %}
-
     <script src="https://code.jquery.com/jquery-3.5.1.js"
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -547,7 +528,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
         crossorigin="anonymous"></script>
-
     <script src="{% static 'plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js' %}"></script>
     <script data-cfasync="false" src="../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js' %}"></script>
     <script src="{% static 'js/app.min.js' %}" type="aefc1fea19d2ed77008968e1-text/javascript"></script>
@@ -557,10 +537,10 @@
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','../../www.google-analytics.com/analytics.js','ga');
+		})(window,document,'script','../../www.google-analytics.com/analytics.js','ga');
 
-		  ga('create', 'UA-53034621-1', 'auto');
-		  ga('send', 'pageview');
+		ga('create', 'UA-53034621-1', 'auto');
+		ga('send', 'pageview');
 	</script>
     <script>
 
@@ -647,8 +627,8 @@
             $('[data-toggle="popover"]').popover();
 
             $('#main_search').submit(function () {
-                $('#submit_button').html('<span class="spinner-border spinner-border-sm mr-2" role="status"
-        aria - hidden="true" ></span > LOADING...')
+                $('#submit_button').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria -
+        hidden = "true" ></span > LOADING...')
 
     });
 
