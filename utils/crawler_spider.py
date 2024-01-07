@@ -162,6 +162,22 @@ def wiki_scraping(link):
     return infobox, empty
 
 
+def wiki_data(lists):
+    """
+
+    :param lists:
+    :return: dictionary of meta data
+    """
+    context = dict()
+    temp = list()
+
+    for i in lists:
+        temp.append(i.split("%")[0])
+    for link in temp:
+        context[str(link)] = wiki_scraping(link)
+    return context
+
+
 def scraper(link):
     """
 
